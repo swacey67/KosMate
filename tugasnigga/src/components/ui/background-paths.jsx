@@ -51,10 +51,8 @@ export function BackgroundPaths({ title = "Background Paths", children }) {
     const words = title.split(" ");
 
     return (
-        // LOGIC CHANGE: Menghapus 'overflow-hidden' dari kontainer utama
         <div className="relative w-full flex flex-col items-center bg-[#070B19]">
             
-            {/* LOGIC CHANGE: Memindahkan 'overflow-hidden' ke layer ini agar hanya memotong garis animasi, bukan kontenmu */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <FloatingPaths position={1} />
                 <FloatingPaths position={-1} />
@@ -68,8 +66,9 @@ export function BackgroundPaths({ title = "Background Paths", children }) {
                     transition={{ duration: 2 }}
                     className="max-w-4xl mx-auto w-full"
                 >
+                    {/* LOGIC CHANGE: Mengubah Teks Slogan */}
                     <span className="inline-block py-1 px-3 rounded-full glass-panel text-cyan-400 text-xs font-bold tracking-wider uppercase mb-6 border-cyan-400/30">
-                        Welcome to the new standard
+                        A smart way to find your stay!
                     </span>
                     
                     <h1 className="mt-2 text-5xl sm:text-7xl md:text-8xl font-bold mb-8 tracking-tighter text-white leading-normal">
@@ -98,7 +97,6 @@ export function BackgroundPaths({ title = "Background Paths", children }) {
                         ))}
                     </h1>
                     
-                    {/* Ini adalah Search Bar milikmu, sekarang bebas dari batasan overflow! */}
                     {children}
 
                 </motion.div>
