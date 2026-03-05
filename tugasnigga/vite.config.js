@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/negger/', 
+  base: '/KosMate/', 
   resolve: {
     dedupe: ['react', 'react-dom'], // Forces Vite to use one strict copy of React
   },
