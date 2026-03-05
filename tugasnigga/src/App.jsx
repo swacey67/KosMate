@@ -1,13 +1,12 @@
 import { BackgroundPaths } from './components/ui/background-paths';
 import DisplayCards from './components/ui/display-cards'; 
 import { ContainerScroll } from './components/ui/container-scroll-animation';
-import { BottomNavBar } from './components/ui/bottom-nav-bar'; // Import Bottom Nav
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import Auth from './Auth'; 
 import { 
   Search, MapPin, Home, DollarSign, Wifi, Wind, 
-  ShieldCheck, Zap, ArrowRight, Star, 
+  ShieldCheck, Zap, Menu, X, ArrowRight, Star, 
   Coffee, ChevronDown, CheckCircle2
 } from 'lucide-react';
 
@@ -15,7 +14,7 @@ const allProperties = [
   { id: 1, title: "The Vertex Penthouse", location: "Senopati, South Jakarta", price: "Rp 67.000.000", period: "/month", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Apartment", rating: 4.9 },
   { id: 2, title: "Lumina Studio Suites", location: "Kuningan, South Jakarta", price: "Rp 3.550.000", period: "/month", image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Premium Kost", rating: 4.8 },
   { id: 3, title: "Kost Ananda Putra", location: "Mlati, Kab. Sleman", price: "Rp 1.700.000", period: "/month", image: "https://bicarasekarang.wordpress.com/wp-content/uploads/2018/09/70518-cover2b2.jpg", type: "Boarding House", rating: 5.0 },
-  { id: 4, title: "Tembalang Executive", location: "Tembalang, Semarang", price: "Rp 2.500.000", period: "/month", image: "https://images.unsplash.com/photo-1502672260266-1c1de2422078?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Premium Kost", rating: 4.9 },
+  { id: 4, title: "Tembalang Executive", location: "Tembalang, Semarang", price: "Rp 2.500.000", period: "/month", image: "https://static.mamikos.com/uploads/cache/data/style/2023-03-04/DKPIRhmn.-360x480.jpg", type: "Premium Kost", rating: 4.9 },
   { id: 5, title: "Banyumanik Suites", location: "Banyumanik, Semarang", price: "Rp 3.200.000", period: "/month", image: "https://s-light.tiket.photos/t/01E25EBZS3W0FY9GTG6C42E1SE/t_htl-mobile/tix-hotel/images-web/2021/03/29/195d3bcb-8713-4c11-a8af-f995e77001fd-1617016516124-fa7d3b9cd836de6692da91b1dcf675c9.jpg", type: "Apartment", rating: 4.7 },
   { id: 6, title: "Candisari Lofts", location: "Candisari, Semarang", price: "Rp 2.800.000", period: "/month", image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Loft", rating: 4.8 },
   { id: 7, title: "Seturan Co-Living", location: "Seturan, Yogyakarta", price: "Rp 1.900.000", period: "/month", image: "https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Premium Kost", rating: 4.6 },
@@ -23,19 +22,53 @@ const allProperties = [
   { id: 9, title: "Pondok Indah Mansions", location: "Pondok Indah, Jakarta", price: "Rp 2.500.000", period: "/month", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Apartment", rating: 4.7 }
 ];
 
-// Logo mengambang di pojok kiri atas
-const TopLogo = ({ navigate }) => (
-  <div className="absolute top-6 left-6 md:top-8 md:left-12 z-[1000] flex items-center gap-2 cursor-pointer" onClick={() => { navigate('/'); window.scrollTo(0,0); }}>
-    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 to-teal-500 flex items-center justify-center box-glow shadow-[0_0_20px_rgba(45,212,191,0.4)]">
-      <Home className="w-6 h-6 text-[#0A1128]" />
-    </div>
-    <span className="text-3xl font-bold tracking-tight text-white hidden md:block drop-shadow-md">
-      Kos<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Mate</span>
-    </span>
-  </div>
-);
+const NavigationBar = ({ isScrolled, navigate, pathname, mobileMenuOpen, setMobileMenuOpen }) => {
+  const scrollToAbout = () => {
+    setMobileMenuOpen(false);
+    if (pathname !== '/') {
+      navigate('/');
+      setTimeout(() => { document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' }); }, 100);
+    } else {
+      document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
-const Explore = ({ navigate, pathname, scrollToAbout }) => {
+  return (
+    <nav className={`fixed w-full z-[1000] transition-all duration-300 ${isScrolled ? 'glass-panel py-3' : 'bg-transparent py-5'}`}>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => { navigate('/'); window.scrollTo(0,0); }}>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-400 to-teal-500 flex items-center justify-center box-glow">
+            <Home className="w-5 h-5 text-[#0A1128]" />
+          </div>
+          <span className="text-2xl font-bold tracking-tight text-white">
+            Kos<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Mate</span>
+          </span>
+        </div>
+        <div className="hidden md:flex items-center gap-8">
+          <span onClick={() => navigate('/explore')} className="text-sm font-medium text-slate-300 hover:text-white transition-colors cursor-pointer">Explore</span>
+          <span onClick={scrollToAbout} className="text-sm font-medium text-slate-300 hover:text-white transition-colors cursor-pointer">About</span>
+          <button onClick={() => navigate('/auth')} className="px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 text-[#070B19] font-bold text-sm hover:scale-105 transition-transform duration-300 box-glow-hover">
+            Sign In / Sign Up
+          </button>
+        </div>
+        <button className="md:hidden text-slate-300" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+      {mobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 w-full glass-panel border-t-0 flex flex-col p-6 gap-4">
+          <span onClick={() => { setMobileMenuOpen(false); navigate('/explore'); }} className="text-slate-300 font-medium py-2">Explore</span>
+          <span onClick={scrollToAbout} className="text-slate-300 font-medium py-2">About</span>
+          <button onClick={() => { setMobileMenuOpen(false); navigate('/auth'); }} className="mt-2 w-full py-3 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 text-[#070B19] font-bold text-sm">
+            Sign In / Sign Up
+          </button>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+const Explore = ({ isScrolled, mobileMenuOpen, setMobileMenuOpen, navigate, pathname }) => {
   const [searchParams] = useSearchParams();
   const locQuery = searchParams.get('location')?.toLowerCase() || "";
   const typeQuery = searchParams.get('type') || "";
@@ -55,7 +88,7 @@ const Explore = ({ navigate, pathname, scrollToAbout }) => {
 
   return (
     <div className="min-h-screen bg-[#070B19] text-slate-200 font-sans selection:bg-teal-500/30 overflow-x-hidden pt-10">
-      <TopLogo navigate={navigate} />
+      <NavigationBar isScrolled={isScrolled} navigate={navigate} pathname={pathname} mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
       
       <div className="flex flex-col overflow-hidden">
         <ContainerScroll
@@ -91,7 +124,7 @@ const Explore = ({ navigate, pathname, scrollToAbout }) => {
         </ContainerScroll>
       </div>
 
-      <section className="px-6 pb-40 max-w-7xl mx-auto -mt-32 md:-mt-64 relative z-20">
+      <section className="px-6 pb-32 max-w-7xl mx-auto -mt-32 md:-mt-64 relative z-20">
         {filteredProperties.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProperties.map((property) => (
@@ -134,28 +167,20 @@ const Explore = ({ navigate, pathname, scrollToAbout }) => {
           </div>
         )}
       </section>
-
-      <BottomNavBar pathname={pathname} navigate={navigate} scrollToAbout={scrollToAbout} />
     </div>
   );
 };
 
 const App = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   const [searchLocation, setSearchLocation] = useState("");
   const [searchType, setSearchType] = useState("");
   const [searchPrice, setSearchPrice] = useState("");
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const scrollToAbout = () => {
-    if (pathname !== '/') {
-      navigate('/');
-      setTimeout(() => { document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' }); }, 100);
-    } else {
-      document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const executeSearch = () => {
     const params = new URLSearchParams();
@@ -170,6 +195,12 @@ const App = () => {
       window.scrollTo(0, 0);
     }
   }, [pathname]);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const baseOverlay = "before:absolute before:inset-0 before:rounded-3xl before:bg-[#070B19]/60 grayscale-[100%] hover:before:opacity-0 hover:grayscale-0 before:transition-opacity before:duration-700 transition-all duration-500 ease-out";
   const stackedCardsData = allProperties.slice(0, 6).map((property, index) => {
@@ -187,7 +218,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={
-        <div className="min-h-screen bg-[#070B19] text-slate-200 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-24">
+        <div className="min-h-screen bg-[#070B19] text-slate-200 font-sans selection:bg-teal-500/30 overflow-x-hidden">
           <style dangerouslySetInnerHTML={{__html: `
             @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
             body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -197,7 +228,7 @@ const App = () => {
             .box-glow-hover:hover { box-shadow: 0 0 35px rgba(45, 212, 191, 0.4); }
           `}} />
 
-          <TopLogo navigate={navigate} />
+          <NavigationBar isScrolled={isScrolled} navigate={navigate} pathname={pathname} mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
 
           <section className="relative pb-10">
             <BackgroundPaths title="Elevate Your Living">
@@ -291,10 +322,19 @@ const App = () => {
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-0">Trending Premium Spaces</h2>
                 <p className="text-slate-400 mt-2">Handpicked properties offering the ultimate living experience.</p>
               </div>
+              <button onClick={() => navigate('/explore')} className="hidden md:flex items-center gap-2 text-teal-400 font-semibold hover:text-cyan-300 transition-colors group cursor-pointer">
+                View All <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
 
             <div className="-mt-[40px] md:-mt-[6px] -ml-[200px]">
               <DisplayCards cards={stackedCardsData} />
+            </div>
+            
+            <div className="mt-8 text-center md:hidden">
+              <button onClick={() => navigate('/explore')} className="inline-flex items-center gap-2 text-teal-400 font-semibold cursor-pointer">
+                View All Properties <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </section>
 
@@ -397,21 +437,81 @@ const App = () => {
             </div>
           </section>
 
-          <footer className="bg-[#050812] border-t border-white/5 pt-20 pb-24 px-6">
-            <div className="max-w-7xl mx-auto text-center">
+          <footer className="bg-[#050812] border-t border-white/5 pt-20 pb-10 px-6">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+              
+              <div className="col-span-1 md:col-span-2 lg:col-span-1">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-400 to-teal-500 flex items-center justify-center">
+                    <Home className="w-5 h-5 text-[#0A1128]" />
+                  </div>
+                  <span className="text-2xl font-bold tracking-tight text-white">
+                    Kos<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Mate</span>
+                  </span>
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                  Redefining urban living for the modern generation. Discover, book, and experience premium spaces effortlessly.
+                </p>
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-slate-300 hover:text-teal-400">
+                     <span className="font-bold">in</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-slate-300 hover:text-teal-400">
+                     <span className="font-bold">ig</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-slate-300 hover:text-teal-400">
+                     <span className="font-bold">x</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-white font-bold mb-6 tracking-wide">Explore</h4>
+                <ul className="space-y-4">
+                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Jakarta Selatan</a></li>
+                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Jakarta Pusat</a></li>
+                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Premium Kosts</a></li>
+                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Luxury Apartments</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="text-white font-bold mb-6 tracking-wide">Company</h4>
+                <ul className="space-y-4">
+                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">About Us</a></li>
+                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Careers</a></li>
+                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Support Center</a></li>
+                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Terms & Privacy</a></li>
+                </ul>
+              </div>
+
+              <div className="col-span-1 md:col-span-2 lg:col-span-1">
+                <h4 className="text-white font-bold mb-6 tracking-wide">Stay Updated</h4>
+                <p className="text-slate-400 text-sm mb-4">Get exclusive early access to new premium listings and offers.</p>
+                <div className="flex bg-[#0A1128] rounded-xl p-1 border border-white/10 focus-within:border-teal-500/50 transition-colors">
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    className="bg-transparent border-none outline-none text-white text-sm px-4 py-3 w-full"
+                  />
+                  <button className="bg-gradient-to-r from-cyan-500 to-teal-500 text-[#070B19] px-4 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
+                    Subscribe
+                  </button>
+                </div>
+              </div>
+
+            </div>
+            
+            <div className="max-w-7xl mx-auto text-center pt-8 border-t border-white/10">
               <p className="text-slate-500 text-xs">
                 &copy; {new Date().getFullYear()} KosMate Technologies. All rights reserved.
               </p>
             </div>
           </footer>
-          
-          {/* Ini adalah Floating Bottom Nav Bar yang baru */}
-          <BottomNavBar pathname={pathname} navigate={navigate} scrollToAbout={scrollToAbout} />
-
         </div>
       } />
 
-      <Route path="/explore" element={<Explore navigate={navigate} pathname={pathname} scrollToAbout={scrollToAbout} />} />
+      <Route path="/explore" element={<Explore isScrolled={isScrolled} pathname={pathname} mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} navigate={navigate} />} />
       <Route path="/auth" element={<Auth />} />
     </Routes>
   );

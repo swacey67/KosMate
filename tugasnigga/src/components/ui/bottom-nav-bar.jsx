@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Home, Search, Info, User } from "lucide-react";
 import { cn } from "../../lib/utils";
 
-// Menu navigasi disesuaikan untuk KosMate
 const navItems = [
   { label: "Home", icon: Home, path: "/" },
   { label: "Explore", icon: Search, path: "/explore" },
@@ -18,7 +17,6 @@ const MOBILE_LABEL_WIDTH = 76;
 export function BottomNavBar({ pathname, navigate, scrollToAbout }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Menyinkronkan efek "aktif" dengan URL saat ini
   useEffect(() => {
     if (pathname === "/") setActiveIndex(0);
     else if (pathname === "/explore") setActiveIndex(1);
@@ -36,14 +34,15 @@ export function BottomNavBar({ pathname, navigate, scrollToAbout }) {
 
   return (
     <motion.nav
-      initial={{ y: 100, opacity: 0 }}
+      // LOGIC CHANGE: Animasi sekarang turun dari atas (y: -50)
+      initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 26 }}
       role="navigation"
       className={cn(
-        "fixed inset-x-0 bottom-6 mx-auto z-[1000] w-fit",
-        // Gaya Dark Glassmorphism khas KosMate
-        "glass-panel bg-[#0A1128]/90 border border-white/10 rounded-full flex items-center p-2 shadow-[0_0_40px_rgba(45,212,191,0.15)] space-x-1 h-[64px]"
+        // LOGIC CHANGE: Pindah ke Atas Kanan layar (top-6 right-4)
+        "fixed top-6 right-4 md:top-8 md:right-12 z-[1000] w-fit",
+        "glass-panel bg-[#0A1128]/90 border border-white/10 rounded-full flex items-center p-1.5 md:p-2 shadow-[0_0_40px_rgba(45,212,191,0.15)] space-x-1 h-[56px] md:h-[64px]"
       )}
     >
       {navItems.map((item, idx) => {
@@ -55,7 +54,8 @@ export function BottomNavBar({ pathname, navigate, scrollToAbout }) {
             key={item.label}
             whileTap={{ scale: 0.95 }}
             className={cn(
-              "flex items-center gap-0 px-4 py-2.5 rounded-full transition-colors duration-300 relative h-12 min-w-[50px]",
+              // Penyesuaian ukuran agar lebih pas saat ditaruh di atas
+              "flex items-center gap-0 px-3 py-2 md:px-4 md:py-2.5 rounded-full transition-colors duration-300 relative h-10 md:h-12 min-w-[44px] md:min-w-[50px]",
               isActive
                 ? "bg-teal-500/20 text-teal-400 gap-2"
                 : "bg-transparent text-slate-400 hover:bg-white/5 hover:text-slate-200",
@@ -64,7 +64,7 @@ export function BottomNavBar({ pathname, navigate, scrollToAbout }) {
             onClick={() => handleNav(item, idx)}
             type="button"
           >
-            <Icon size={22} strokeWidth={2} className="transition-colors duration-200 shrink-0" />
+            <Icon size={20} strokeWidth={2} className="transition-colors duration-200 shrink-0 md:w-[22px] md:h-[22px]" />
 
             <motion.div
               initial={false}
@@ -82,7 +82,7 @@ export function BottomNavBar({ pathname, navigate, scrollToAbout }) {
             >
               <span
                 className={cn(
-                  "font-bold text-sm whitespace-nowrap",
+                  "font-bold text-xs md:text-sm whitespace-nowrap",
                   isActive ? "text-teal-400" : "opacity-0"
                 )}
               >
