@@ -41,12 +41,12 @@ const App = () => {
     },
     {
       id: 3,
-      title: "Aura Residence",
-      location: "SCBD, Central Jakarta",
-      price: "$850",
+      title: "Kost Ananda Putra",
+      location: "Mlati, Kab. Sleman",
+      price: "Rp 1.700.000",
       period: "/month",
       image: "https://images.unsplash.com/photo-1502672260266-1c1e5250fe0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      type: "Loft",
+      type: "Boarding House",
       rating: 5.0
     }
   ];

@@ -1,0 +1,33 @@
+name: Deploy KosMate to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # This tells the robot to wake up whenever you push to 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allows the bot to push the final website to the gh-pages branch
+
+    steps:
+      - name: Get the latest code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (The Engine)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies & Build
+        working-directory: ./tugasnigga
+        run: |
+          npm install
+          npm run build
+
+      - name: Push to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./tugasnigga/dist
