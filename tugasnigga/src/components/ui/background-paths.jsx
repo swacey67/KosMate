@@ -51,15 +51,16 @@ export function BackgroundPaths({ title = "Background Paths", children }) {
     const words = title.split(" ");
 
     return (
-        // LOGIC CHANGE: Removed 'min-h-screen' so it stops forcing a massive height
-        <div className="relative w-full flex flex-col items-center overflow-hidden bg-[#070B19]">
-            <div className="absolute inset-0">
+        // LOGIC CHANGE: Menghapus 'overflow-hidden' dari kontainer utama
+        <div className="relative w-full flex flex-col items-center bg-[#070B19]">
+            
+            {/* LOGIC CHANGE: Memindahkan 'overflow-hidden' ke layer ini agar hanya memotong garis animasi, bukan kontenmu */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <FloatingPaths position={1} />
                 <FloatingPaths position={-1} />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#0A1128]/80 via-transparent to-[#070B19]"></div>
             </div>
 
-            {/* LOGIC CHANGE: Tightened 'pb-20' down to 'pb-12' to close the gap before the "Trusted By" section */}
             <div className="relative z-10 container mx-auto px-4 md:px-6 text-center pt-32 pb-12">
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -71,7 +72,7 @@ export function BackgroundPaths({ title = "Background Paths", children }) {
                         Welcome to the new standard
                     </span>
                     
-                  <h1 className="mt-2 text-5xl sm:text-7xl md:text-8xl font-bold mb-8 tracking-tighter text-white leading-normal">
+                    <h1 className="mt-2 text-5xl sm:text-7xl md:text-8xl font-bold mb-8 tracking-tighter text-white leading-normal">
                         {words.map((word, wordIndex) => (
                             <span
                                 key={wordIndex}
@@ -88,7 +89,6 @@ export function BackgroundPaths({ title = "Background Paths", children }) {
                                             stiffness: 150,
                                             damping: 25,
                                         }}
-                                        // Added py-2 here to prevent the browser from cropping the gradient!
                                         className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-400 py-2"
                                     >
                                         {letter}
@@ -98,6 +98,7 @@ export function BackgroundPaths({ title = "Background Paths", children }) {
                         ))}
                     </h1>
                     
+                    {/* Ini adalah Search Bar milikmu, sekarang bebas dari batasan overflow! */}
                     {children}
 
                 </motion.div>
