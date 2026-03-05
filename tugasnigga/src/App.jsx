@@ -1,23 +1,21 @@
 import { BackgroundPaths } from './components/ui/background-paths';
 import DisplayCards from './components/ui/display-cards'; 
 import { ContainerScroll } from './components/ui/container-scroll-animation';
-// LOGIC CHANGE: Imported the new FluidDropdown component
-import { FluidDropdown } from './components/ui/fluid-dropdown';
-import React, { useState, useEffect } from 'react';
+import { BottomNavBar } from './components/ui/bottom-nav-bar'; // Import Bottom Nav
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import Auth from './Auth'; 
-// LOGIC CHANGE: Imported extra icons for the dropdown menus
 import { 
   Search, MapPin, Home, DollarSign, Wifi, Wind, 
-  ShieldCheck, Zap, Menu, X, ArrowRight, Star, 
-  Coffee, CheckCircle2, Layers, Building2, Map, Wallet, CreditCard, Landmark
+  ShieldCheck, Zap, ArrowRight, Star, 
+  Coffee, ChevronDown, CheckCircle2
 } from 'lucide-react';
 
 const allProperties = [
   { id: 1, title: "The Vertex Penthouse", location: "Senopati, South Jakarta", price: "Rp 67.000.000", period: "/month", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Apartment", rating: 4.9 },
   { id: 2, title: "Lumina Studio Suites", location: "Kuningan, South Jakarta", price: "Rp 3.550.000", period: "/month", image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Premium Kost", rating: 4.8 },
   { id: 3, title: "Kost Ananda Putra", location: "Mlati, Kab. Sleman", price: "Rp 1.700.000", period: "/month", image: "https://bicarasekarang.wordpress.com/wp-content/uploads/2018/09/70518-cover2b2.jpg", type: "Boarding House", rating: 5.0 },
-  { id: 4, title: "Tembalang Executive", location: "Tembalang, Semarang", price: "Rp 2.500.000", period: "/month", image: "https://static.mamikos.com/uploads/cache/data/style/2023-03-04/DKPIRhmn.-360x480.jpg", type: "Premium Kost", rating: 4.9 },
+  { id: 4, title: "Tembalang Executive", location: "Tembalang, Semarang", price: "Rp 2.500.000", period: "/month", image: "https://images.unsplash.com/photo-1502672260266-1c1de2422078?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Premium Kost", rating: 4.9 },
   { id: 5, title: "Banyumanik Suites", location: "Banyumanik, Semarang", price: "Rp 3.200.000", period: "/month", image: "https://s-light.tiket.photos/t/01E25EBZS3W0FY9GTG6C42E1SE/t_htl-mobile/tix-hotel/images-web/2021/03/29/195d3bcb-8713-4c11-a8af-f995e77001fd-1617016516124-fa7d3b9cd836de6692da91b1dcf675c9.jpg", type: "Apartment", rating: 4.7 },
   { id: 6, title: "Candisari Lofts", location: "Candisari, Semarang", price: "Rp 2.800.000", period: "/month", image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Loft", rating: 4.8 },
   { id: 7, title: "Seturan Co-Living", location: "Seturan, Yogyakarta", price: "Rp 1.900.000", period: "/month", image: "https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Premium Kost", rating: 4.6 },
@@ -25,70 +23,19 @@ const allProperties = [
   { id: 9, title: "Pondok Indah Mansions", location: "Pondok Indah, Jakarta", price: "Rp 2.500.000", period: "/month", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", type: "Apartment", rating: 4.7 }
 ];
 
-// LOGIC CHANGE: Configuration arrays for the new Fluid Dropdowns
-const propertyTypeOptions = [
-  { id: "", label: "Any Type", icon: Layers, color: "#2DD4BF" },
-  { id: "Apartment", label: "Apartment", icon: Building2, color: "#2DD4BF" },
-  { id: "Premium Kost", label: "Premium Kost", icon: Home, color: "#2DD4BF" },
-  { id: "Boarding House", label: "Boarding House", icon: Map, color: "#2DD4BF" },
-  { id: "Loft", label: "Loft", icon: Building2, color: "#2DD4BF" },
-  { id: "Studio", label: "Studio", icon: Home, color: "#2DD4BF" },
-];
+// Logo mengambang di pojok kiri atas
+const TopLogo = ({ navigate }) => (
+  <div className="absolute top-6 left-6 md:top-8 md:left-12 z-[1000] flex items-center gap-2 cursor-pointer" onClick={() => { navigate('/'); window.scrollTo(0,0); }}>
+    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 to-teal-500 flex items-center justify-center box-glow shadow-[0_0_20px_rgba(45,212,191,0.4)]">
+      <Home className="w-6 h-6 text-[#0A1128]" />
+    </div>
+    <span className="text-3xl font-bold tracking-tight text-white hidden md:block drop-shadow-md">
+      Kos<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Mate</span>
+    </span>
+  </div>
+);
 
-const priceRangeOptions = [
-  { id: "", label: "Any Price", icon: Layers, color: "#2DD4BF" },
-  { id: "0-2000000", label: "Under Rp 2 Juta", icon: Wallet, color: "#2DD4BF" },
-  { id: "2000000-5000000", label: "Rp 2 Juta - Rp 5 Juta", icon: CreditCard, color: "#2DD4BF" },
-  { id: "5000000-999999999", label: "Above Rp 5 Juta", icon: Landmark, color: "#2DD4BF" },
-];
-
-const NavigationBar = ({ isScrolled, navigate, pathname, mobileMenuOpen, setMobileMenuOpen }) => {
-  const scrollToAbout = () => {
-    setMobileMenuOpen(false);
-    if (pathname !== '/') {
-      navigate('/');
-      setTimeout(() => { document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' }); }, 100);
-    } else {
-      document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  return (
-    <nav className={`fixed w-full z-[1000] transition-all duration-300 ${isScrolled ? 'glass-panel py-3' : 'bg-transparent py-5'}`}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => { navigate('/'); window.scrollTo(0,0); }}>
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-400 to-teal-500 flex items-center justify-center box-glow">
-            <Home className="w-5 h-5 text-[#0A1128]" />
-          </div>
-          <span className="text-2xl font-bold tracking-tight text-white">
-            Kos<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Mate</span>
-          </span>
-        </div>
-        <div className="hidden md:flex items-center gap-8">
-          <span onClick={() => navigate('/explore')} className="text-sm font-medium text-slate-300 hover:text-white transition-colors cursor-pointer">Explore</span>
-          <span onClick={scrollToAbout} className="text-sm font-medium text-slate-300 hover:text-white transition-colors cursor-pointer">About</span>
-          <button onClick={() => navigate('/auth')} className="px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 text-[#070B19] font-bold text-sm hover:scale-105 transition-transform duration-300 box-glow-hover">
-            Sign In / Sign Up
-          </button>
-        </div>
-        <button className="md:hidden text-slate-300" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-      </div>
-      {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full glass-panel border-t-0 flex flex-col p-6 gap-4">
-          <span onClick={() => { setMobileMenuOpen(false); navigate('/explore'); }} className="text-slate-300 font-medium py-2">Explore</span>
-          <span onClick={scrollToAbout} className="text-slate-300 font-medium py-2">About</span>
-          <button onClick={() => { setMobileMenuOpen(false); navigate('/auth'); }} className="mt-2 w-full py-3 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 text-[#070B19] font-bold text-sm">
-            Sign In / Sign Up
-          </button>
-        </div>
-      )}
-    </nav>
-  );
-};
-
-const Explore = ({ isScrolled, mobileMenuOpen, setMobileMenuOpen, navigate, pathname }) => {
+const Explore = ({ navigate, pathname, scrollToAbout }) => {
   const [searchParams] = useSearchParams();
   const locQuery = searchParams.get('location')?.toLowerCase() || "";
   const typeQuery = searchParams.get('type') || "";
@@ -108,7 +55,7 @@ const Explore = ({ isScrolled, mobileMenuOpen, setMobileMenuOpen, navigate, path
 
   return (
     <div className="min-h-screen bg-[#070B19] text-slate-200 font-sans selection:bg-teal-500/30 overflow-x-hidden pt-10">
-      <NavigationBar isScrolled={isScrolled} navigate={navigate} pathname={pathname} mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
+      <TopLogo navigate={navigate} />
       
       <div className="flex flex-col overflow-hidden">
         <ContainerScroll
@@ -144,7 +91,7 @@ const Explore = ({ isScrolled, mobileMenuOpen, setMobileMenuOpen, navigate, path
         </ContainerScroll>
       </div>
 
-      <section className="px-6 pb-32 max-w-7xl mx-auto -mt-32 md:-mt-64 relative z-20">
+      <section className="px-6 pb-40 max-w-7xl mx-auto -mt-32 md:-mt-64 relative z-20">
         {filteredProperties.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProperties.map((property) => (
@@ -187,20 +134,28 @@ const Explore = ({ isScrolled, mobileMenuOpen, setMobileMenuOpen, navigate, path
           </div>
         )}
       </section>
+
+      <BottomNavBar pathname={pathname} navigate={navigate} scrollToAbout={scrollToAbout} />
     </div>
   );
 };
 
 const App = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
   const [searchLocation, setSearchLocation] = useState("");
   const [searchType, setSearchType] = useState("");
   const [searchPrice, setSearchPrice] = useState("");
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  const scrollToAbout = () => {
+    if (pathname !== '/') {
+      navigate('/');
+      setTimeout(() => { document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' }); }, 100);
+    } else {
+      document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const executeSearch = () => {
     const params = new URLSearchParams();
@@ -215,12 +170,6 @@ const App = () => {
       window.scrollTo(0, 0);
     }
   }, [pathname]);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const baseOverlay = "before:absolute before:inset-0 before:rounded-3xl before:bg-[#070B19]/60 grayscale-[100%] hover:before:opacity-0 hover:grayscale-0 before:transition-opacity before:duration-700 transition-all duration-500 ease-out";
   const stackedCardsData = allProperties.slice(0, 6).map((property, index) => {
@@ -238,7 +187,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={
-        <div className="min-h-screen bg-[#070B19] text-slate-200 font-sans selection:bg-teal-500/30 overflow-x-hidden">
+        <div className="min-h-screen bg-[#070B19] text-slate-200 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-24">
           <style dangerouslySetInnerHTML={{__html: `
             @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
             body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -248,7 +197,7 @@ const App = () => {
             .box-glow-hover:hover { box-shadow: 0 0 35px rgba(45, 212, 191, 0.4); }
           `}} />
 
-          <NavigationBar isScrolled={isScrolled} navigate={navigate} pathname={pathname} mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
+          <TopLogo navigate={navigate} />
 
           <section className="relative pb-10">
             <BackgroundPaths title="Elevate Your Living">
@@ -256,7 +205,7 @@ const App = () => {
                 Premium kosts and apartments curated for the modern student and ambitious professional. Experience luxury without the hassle.
               </p>
 
-              <div className="glass-panel rounded-2xl p-3 md:p-4 max-w-4xl mx-auto shadow-2xl border border-white/10 flex flex-col md:flex-row gap-3 transform hover:scale-[1.01] transition-transform duration-300">
+              <div className="glass-panel rounded-2xl p-3 md:p-4 max-w-4xl mx-auto shadow-2xl border border-white/10 flex flex-col md:flex-row gap-3 transform hover:scale-[1.01] transition-transform duration-300 relative z-[500]">
                 
                 <div className="flex-1 flex items-center bg-[#0A1128]/50 rounded-xl px-4 py-3 md:py-4 border border-white/5 group hover:border-teal-500/30 transition-colors">
                   <MapPin className="text-teal-400 w-5 h-5 mr-3" />
@@ -273,35 +222,51 @@ const App = () => {
                   </div>
                 </div>
 
-                {/* LOGIC CHANGE: Replaced the standard select with the FluidDropdown. Added z-50 to ensure it opens ON TOP of the cards to its right */}
-                <div className="flex-1 flex items-center bg-[#0A1128]/50 rounded-xl px-4 py-3 md:py-4 border border-white/5 group hover:border-teal-500/30 transition-colors relative z-50">
-                  <Home className="text-teal-400 w-5 h-5 mr-3" />
-                  <div className="flex flex-col text-left w-full">
-                    <label className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-1">Property Type</label>
-                    <FluidDropdown 
-                      options={propertyTypeOptions} 
-                      value={searchType} 
-                      onChange={setSearchType} 
-                    />
+                <div className="flex-1 flex items-center bg-[#0A1128]/50 rounded-xl px-4 py-3 md:py-4 border border-white/5 group hover:border-teal-500/30 transition-colors cursor-pointer relative">
+                  <Home className="text-teal-400 w-5 h-5 mr-3 z-10" />
+                  <div className="flex flex-col text-left w-full relative">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 font-bold z-10">Property Type</label>
+                    <div className="flex justify-between items-center w-full relative">
+                      <select 
+                        value={searchType}
+                        onChange={(e) => setSearchType(e.target.value)}
+                        className="w-full bg-transparent border-none outline-none text-white text-sm font-medium appearance-none cursor-pointer pr-6 relative z-10"
+                      >
+                        <option value="" className="text-black">Any Type</option>
+                        <option value="Apartment" className="text-black">Apartment</option>
+                        <option value="Premium Kost" className="text-black">Premium Kost</option>
+                        <option value="Boarding House" className="text-black">Boarding House</option>
+                        <option value="Loft" className="text-black">Loft</option>
+                        <option value="Studio" className="text-black">Studio</option>
+                      </select>
+                      <ChevronDown className="w-4 h-4 text-slate-500 absolute right-0 pointer-events-none z-0" />
+                    </div>
                   </div>
                 </div>
 
-                {/* LOGIC CHANGE: Replaced the standard select with the FluidDropdown. Added z-40 so it sits just beneath the property menu but above the button */}
-                <div className="flex-1 flex items-center bg-[#0A1128]/50 rounded-xl px-4 py-3 md:py-4 border border-white/5 group hover:border-teal-500/30 transition-colors relative z-40">
-                  <DollarSign className="text-teal-400 w-5 h-5 mr-3" />
-                  <div className="flex flex-col text-left w-full">
-                    <label className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-1">Price Range</label>
-                    <FluidDropdown 
-                      options={priceRangeOptions} 
-                      value={searchPrice} 
-                      onChange={setSearchPrice} 
-                    />
+                <div className="flex-1 flex items-center bg-[#0A1128]/50 rounded-xl px-4 py-3 md:py-4 border border-white/5 group hover:border-teal-500/30 transition-colors cursor-pointer relative">
+                  <DollarSign className="text-teal-400 w-5 h-5 mr-3 z-10" />
+                  <div className="flex flex-col text-left w-full relative">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 font-bold z-10">Price Range</label>
+                    <div className="flex justify-between items-center w-full relative">
+                      <select 
+                        value={searchPrice}
+                        onChange={(e) => setSearchPrice(e.target.value)}
+                        className="w-full bg-transparent border-none outline-none text-white text-sm font-medium appearance-none cursor-pointer pr-6 relative z-10"
+                      >
+                        <option value="" className="text-black">Any Price</option>
+                        <option value="0-2000000" className="text-black">Under Rp 2 Juta</option>
+                        <option value="2000000-5000000" className="text-black">Rp 2 Juta - Rp 5 Juta</option>
+                        <option value="5000000-999999999" className="text-black">Above Rp 5 Juta</option>
+                      </select>
+                      <ChevronDown className="w-4 h-4 text-slate-500 absolute right-0 pointer-events-none z-0" />
+                    </div>
                   </div>
                 </div>
 
                 <button 
                   onClick={executeSearch}
-                  className="bg-gradient-to-r from-cyan-500 to-teal-500 text-[#070B19] rounded-xl px-8 py-4 flex items-center justify-center gap-2 font-bold hover:shadow-[0_0_25px_rgba(45,212,191,0.5)] transition-all duration-300 md:w-auto w-full z-10"
+                  className="bg-gradient-to-r from-cyan-500 to-teal-500 text-[#070B19] rounded-xl px-8 py-4 flex items-center justify-center gap-2 font-bold hover:shadow-[0_0_25px_rgba(45,212,191,0.5)] transition-all duration-300 md:w-auto w-full relative z-10"
                 >
                   <Search className="w-5 h-5" /><span>Search</span>
                 </button>
@@ -326,25 +291,15 @@ const App = () => {
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-0">Trending Premium Spaces</h2>
                 <p className="text-slate-400 mt-2">Handpicked properties offering the ultimate living experience.</p>
               </div>
-              <button onClick={() => navigate('/explore')} className="hidden md:flex items-center gap-2 text-teal-400 font-semibold hover:text-cyan-300 transition-colors group cursor-pointer">
-                View All <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
             </div>
 
             <div className="-mt-[40px] md:-mt-[6px] -ml-[200px]">
               <DisplayCards cards={stackedCardsData} />
             </div>
-            
-            <div className="mt-8 text-center md:hidden">
-              <button onClick={() => navigate('/explore')} className="inline-flex items-center gap-2 text-teal-400 font-semibold cursor-pointer">
-                View All Properties <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
           </section>
 
           <section id="about-section" className="pt-8 pb-24 px-6 max-w-7xl mx-auto relative z-20">
             <div className="glass-panel rounded-[3rem] p-8 md:p-16 flex flex-col lg:flex-row items-center gap-12 border border-white/5 bg-gradient-to-br from-[#0A1128] to-[#070B19]">
-              
               <div className="flex-1 space-y-6">
                 <span className="inline-block py-1 px-3 rounded-full bg-teal-500/10 text-teal-400 text-xs font-bold tracking-wider uppercase border border-teal-500/20">
                   Our Story
@@ -392,7 +347,6 @@ const App = () => {
                   </div>
                 </div>
               </div>
-
             </div>
           </section>
 
@@ -443,81 +397,21 @@ const App = () => {
             </div>
           </section>
 
-          <footer className="bg-[#050812] border-t border-white/5 pt-20 pb-10 px-6">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-              
-              <div className="col-span-1 md:col-span-2 lg:col-span-1">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-400 to-teal-500 flex items-center justify-center">
-                    <Home className="w-5 h-5 text-[#0A1128]" />
-                  </div>
-                  <span className="text-2xl font-bold tracking-tight text-white">
-                    Kos<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Mate</span>
-                  </span>
-                </div>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                  Redefining urban living for the modern generation. Discover, book, and experience premium spaces effortlessly.
-                </p>
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-slate-300 hover:text-teal-400">
-                     <span className="font-bold">in</span>
-                  </div>
-                  <div className="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-slate-300 hover:text-teal-400">
-                     <span className="font-bold">ig</span>
-                  </div>
-                  <div className="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-slate-300 hover:text-teal-400">
-                     <span className="font-bold">x</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-white font-bold mb-6 tracking-wide">Explore</h4>
-                <ul className="space-y-4">
-                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Jakarta Selatan</a></li>
-                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Jakarta Pusat</a></li>
-                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Premium Kosts</a></li>
-                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Luxury Apartments</a></li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="text-white font-bold mb-6 tracking-wide">Company</h4>
-                <ul className="space-y-4">
-                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">About Us</a></li>
-                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Careers</a></li>
-                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Support Center</a></li>
-                  <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">Terms & Privacy</a></li>
-                </ul>
-              </div>
-
-              <div className="col-span-1 md:col-span-2 lg:col-span-1">
-                <h4 className="text-white font-bold mb-6 tracking-wide">Stay Updated</h4>
-                <p className="text-slate-400 text-sm mb-4">Get exclusive early access to new premium listings and offers.</p>
-                <div className="flex bg-[#0A1128] rounded-xl p-1 border border-white/10 focus-within:border-teal-500/50 transition-colors">
-                  <input 
-                    type="email" 
-                    placeholder="Enter your email" 
-                    className="bg-transparent border-none outline-none text-white text-sm px-4 py-3 w-full"
-                  />
-                  <button className="bg-gradient-to-r from-cyan-500 to-teal-500 text-[#070B19] px-4 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
-                    Subscribe
-                  </button>
-                </div>
-              </div>
-
-            </div>
-            
-            <div className="max-w-7xl mx-auto text-center pt-8 border-t border-white/10">
+          <footer className="bg-[#050812] border-t border-white/5 pt-20 pb-24 px-6">
+            <div className="max-w-7xl mx-auto text-center">
               <p className="text-slate-500 text-xs">
                 &copy; {new Date().getFullYear()} KosMate Technologies. All rights reserved.
               </p>
             </div>
           </footer>
+          
+          {/* Ini adalah Floating Bottom Nav Bar yang baru */}
+          <BottomNavBar pathname={pathname} navigate={navigate} scrollToAbout={scrollToAbout} />
+
         </div>
       } />
 
-      <Route path="/explore" element={<Explore isScrolled={isScrolled} pathname={pathname} mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} navigate={navigate} />} />
+      <Route path="/explore" element={<Explore navigate={navigate} pathname={pathname} scrollToAbout={scrollToAbout} />} />
       <Route path="/auth" element={<Auth />} />
     </Routes>
   );
